@@ -41,13 +41,7 @@ public class LiveHelpServlet extends HttpServlet {
 		String className = req.getParameter("class");
 		if (className == null)
 			return;
-		String arg;
-		if (UrlUtil.isIE(req)) {
-			// parameter is escaped using JavaScript
-			arg = UrlUtil.unescape(UrlUtil.getRawRequestParameter(req, "arg"));
-		} else {
-			arg = req.getParameter("arg");
-		}
+		String arg = req.getParameter("arg");
 		Plugin plugin = Platform.getPlugin(pluginID);
 		if (plugin == null)
 			return;
