@@ -16,7 +16,7 @@
 	Cookie[] cookies = request.getCookies();
 	if (cookies != null) {
 		for (int i = 0; i < cookies.length; i++) {
-		System.out.println(cookies[i].getName()+"="+cookies[i].getValue());
+		//System.out.println(cookies[i].getName()+"="+cookies[i].getValue());
 			if ("cookiesEnabled".equals(cookies[i].getName()) && "yes".equals(cookies[i].getValue())) {
 				cookiesEnabled = true;
 			}
