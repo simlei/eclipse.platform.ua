@@ -2,7 +2,7 @@
  * (c) Copyright IBM Corp. 2000, 2002.
  * All Rights Reserved.
  */
-package org.eclipse.help.ui.internal.browser.linux;
+package org.eclipse.help.ui.internal.browser;
 import java.io.*;
 
 import org.eclipse.core.runtime.IPath;
@@ -20,16 +20,19 @@ public class MozillaBrowserAdapter implements IBrowser {
 	private static int width, height;
 	private static boolean setLocationPending;
 	private static boolean setSizePending;
+	private static String executable;
 	/**
 	 * Constructor
 	 */
 	private MozillaBrowserAdapter() {
 	}
-	public static MozillaBrowserAdapter getInstance() {
+	public static MozillaBrowserAdapter getInstance(String executable) {
 		setLocationPending = false;
 		setSizePending = false;
-		if (instance == null)
+		if (instance == null){
 			instance = new MozillaBrowserAdapter();
+		}
+		MozillaBrowserAdapter.executable=executable;
 		return instance;
 	}
 	/*
@@ -145,12 +148,12 @@ public class MozillaBrowserAdapter implements IBrowser {
 			waitForBrowser();
 			if (exitRequested)
 				return;
-			if (openBrowser("mozilla -remote openURL(" + url + ")") == 0)
+			if (openBrowser(executable+" -remote openURL(" + url + ")") == 0)
 				return;
 			if (exitRequested)
 				return;
 			browserFullyOpenedAt = System.currentTimeMillis() + DELAY;
-			openBrowser("mozilla " + url);
+			openBrowser(executable+" " + url);
 		}
 		private void waitForBrowser() {
 			while (System.currentTimeMillis() < browserFullyOpenedAt)
