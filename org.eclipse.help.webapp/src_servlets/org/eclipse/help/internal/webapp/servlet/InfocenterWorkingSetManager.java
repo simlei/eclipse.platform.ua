@@ -27,8 +27,7 @@ import org.eclipse.help.internal.workingset.*;
  */
 public class InfocenterWorkingSetManager implements IHelpWorkingSetManager {
 	private static final int MAX_COOKIES=15;
-	// private static final int MAX_COOKIE_PAYLOAD = 4096 - "wset01=".length()  - "81920<".length()- 1; // IE does not work, it stores about 77 bytetes more and cannot handle it.
-	 private static final int MAX_COOKIE_PAYLOAD = 1900;
+	 private static final int MAX_COOKIE_PAYLOAD = 4096 - "wset01=".length()  - "81920<".length()- 1; // Http11 connector will not serve the request that contains line longer than 4096 (not even one full cookie)
 
 	private HttpServletRequest request;
 	private HttpServletResponse response;
@@ -167,7 +166,7 @@ public class InfocenterWorkingSetManager implements IHelpWorkingSetManager {
 	/* * Persists all working sets. Should only be called by the webapp working
 	 * set dialog.
 	 * Saves the working sets in the persistence store
-	 * format: curentWorkingSetName|name1,href11,href12|name2,href22
+	 * format: curentWorkingSetName|name1&href11&href12|name2&href22
 	 */
 	private void saveState() {
 		StringBuffer data = new StringBuffer();
