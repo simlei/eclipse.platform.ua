@@ -119,11 +119,11 @@ public class Help {
 	 * Controls standalone help system from command line.
 	 * @param args array of String containing options
 	 *  Options are:
-	 * 	<code>-command start | shutdown | (displayHelp [href]) [-eclipsehome eclipseInstallPath] [-host helpServerHost] [-port helpServerPort] [platform options] [-vmargs [Java VM arguments]]</code>
+	 * 	<code>-command start | shutdown | (displayHelp [href]) [-eclipsehome eclipseInstallPath] [-host helpServerHost] [-port helpServerPort] [platform options] [-vmargs JavaVMarguments]</code>
 	 *  where
 	 *  <ul>
 	 *  <li><code>href</code> is the URL of the help resource to display,</li>
-	 * 	<li><code>dir</code> specifies Eclipse installation directory;
+	 * 	<li><code>eclipseInstallPath</code> specifies Eclipse installation directory;
 	 * 	  it must be provided, when current directory is not the same
 	 *    as Eclipse installation directory,</li>
 	 * 	<li><code>helpServerHost</code> specifies host name of the interface
