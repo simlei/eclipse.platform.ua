@@ -59,12 +59,17 @@ INPUT {
 	padding:0px;
 }
 
-
-#searchTable {
-	padding-left:5;
+A {
+	color:WindowText;
+	text-decoration:none;
 }
 
-#searchWord {	
+#searchTD {
+	padding-left:7px;
+	padding-right:4px;
+}
+
+#searchWord {
 	padding-left:4px;
 	padding-right:4px;
 	border:1px solid ThreeDShadow;
@@ -75,16 +80,22 @@ INPUT {
 	color:Window;
 	font-weight:bold;
 	border:1px solid ThreeDShadow;
+	margin-left:1px;
 }
 
-
-#advanced {
+#scopeLabel {
 	text-decoration:underline; 
-	text-align:right;
 	color:#0066FF; 
 	cursor:hand;
-	margin-left:4px;
+	padding-left:15px;
+}
+
+#scope { 
+	text-align:right;
+	margin-left:5px;
 	border:0px;
+	color:WindowText;
+	text-decoration:none;
 }
 
 <%
@@ -102,35 +113,34 @@ INPUT {
 var isIE = navigator.userAgent.indexOf('MSIE') != -1;
 var isMozilla = navigator.userAgent.toLowerCase().indexOf('mozilla') != -1 && parseInt(navigator.appVersion.substring(0,1)) >= 5;
 
-<%
-	String[] selectedBooks = data.getSelectedTocs();
-%>
-// create list of books initilize selectedBooks variable used by advances search
-var selectedBooks = new Array(<%=selectedBooks.length%>);
-<%
-for (int i=0; i<selectedBooks.length; i++) 
-{
-%>
-	selectedBooks[<%=i%>] = "<%=UrlUtil.JavaScriptEncode(selectedBooks[i])%>";
-<%
-}
-%>
-
 var advancedDialog;
-var w = 400;
+var w = 300;
 var h = 300;
-
-function saveSelectedBooks(books)
-{
-	selectedBooks = new Array(books.length);
-	for (var i=0; i<selectedBooks.length; i++){
-		selectedBooks[i] = new String(books[i]);
-	}
-}
 
 function openAdvanced()
 {
-	advancedDialog = window.open("advanced.jsp?searchWord="+encodeURIComponent(document.getElementById("searchWord").value), "advancedDialog", "resizeable=no,height="+h+",width="+w );
+	var scope = document.getElementById("scope").firstChild;
+	var workingSet = "";
+	if (scope != null)
+	 	workingSet = document.getElementById("scope").firstChild.nodeValue;
+	 	
+<%
+if (data.isIE()){
+%>
+	var l = top.screenLeft + (top.document.body.clientWidth - w) / 2;
+	var t = top.screenTop + (top.document.body.clientHeight - h) / 2;
+<%
+} else {
+%>
+	var l = top.screenX + (top.innerWidth - w) / 2;
+	var t = top.screenY + (top.innerHeight - h) / 2;
+<%
+}
+%>
+	// move the dialog just a bit higher than the middle
+	if (t-50 > 0) t = t-50;
+	
+	advancedDialog = window.open("workingSetManager.jsp?workingSet="+encodeURIComponent(workingSet), "advancedDialog", "resizeable=no,height="+h+",width="+w+",left="+l+",top="+t );
 	advancedDialog.focus(); 
 }
 
@@ -146,10 +156,11 @@ function closeAdvanced()
 /**
  * This function can be called from this page or from
  * the advanced search page. When called from the advanced
- * search page, a query is passed.
- */
+ * search page, a query is passed. */
 function doSearch(query)
 {
+	var workingSet = document.getElementById("scope").firstChild.nodeValue;
+
 	if (!query || query == "")
 	{
 		var form = document.forms["searchForm"];
@@ -158,6 +169,8 @@ function doSearch(query)
 		if (!searchWord || searchWord == "")
 			return;
 		query ="searchWord="+encodeURIComponent(searchWord)+"&maxHits="+maxHits;
+		if (workingSet != '<%=ServletResources.getString("All", request)%>')
+			query = query +"&scope="+encodeURIComponent(workingSet);
 	}
 		
 	/******** HARD CODED VIEW NAME *********/
@@ -199,20 +212,24 @@ function onloadHandler(e)
 	<form  name="searchForm"   onsubmit="doSearch()">
 		<table id="searchTable" align="left" valign="middle" cellspacing="0" cellpadding="0" border="0">
 			<tr nowrap  valign="middle">
-				<td>
+				<td id="searchTD">
 					<label id="searchLabel" for="searchWord">
 					&nbsp;<%=ServletResources.getString("Search", request)%>:
 					</label>
 				</td>
 				<td>
-					<input type="text" id="searchWord" name="searchWord" value='' size="20" maxlength="256" alt='<%=ServletResources.getString("SearchExpression", request)%>'>
+					<input type="text" id="searchWord" name="searchWord" value='' size="24" maxlength="256" alt='<%=ServletResources.getString("SearchExpression", request)%>'>
 				</td>
 				<td >
 					&nbsp;<input type="button" onclick="this.blur();doSearch()" value='<%=ServletResources.getString("GO", request)%>' id="go" alt='<%=ServletResources.getString("GO", request)%>'>
 					<input type="hidden" name="maxHits" value="500" >
 				</td>
 				<td nowrap>
-					<a id="advanced" href="javascript:openAdvanced();" alt='<%=ServletResources.getString("Advanced", request)%>' onmouseover="window.status='<%=ServletResources.getString("Advanced", request)%>'; return true;" onmouseout="window.status='';"><%=ServletResources.getString("Advanced", request)%></a>&nbsp;
+					<a id="scopeLabel" href="javascript:openAdvanced();" title='<%=ServletResources.getString("selectWorkingSet", request)%>' alt='<%=ServletResources.getString("selectWorkingSet", request)%>' onmouseover="window.status='<%=ServletResources.getString("selectWorkingSet", request)%>'; return true;" onmouseout="window.status='';"><%=ServletResources.getString("Scope", request)%>:</a>
+				</td>
+				<td nowrap>
+					<input type="hidden" name="workingSet" value='<%=data.getScope()%>' >
+					<div id="scope" ><%=data.getScope()%></div>
 				</td>
 			</tr>
 
