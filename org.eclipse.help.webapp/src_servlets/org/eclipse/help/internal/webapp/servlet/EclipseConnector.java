@@ -17,6 +17,7 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import org.eclipse.help.internal.*;
 import org.eclipse.help.internal.base.*;
 import org.eclipse.help.internal.webapp.data.*;
 
@@ -60,18 +61,25 @@ public class EclipseConnector {
 					|| !UrlUtil.isLocalRequest(req)) {
 					return;
 				}
-			} else
+			} else {
+				// enable the role
+				IHelpRoleManager roleManager = HelpPlugin.getRoleManager();
+				if (roleManager != null)
+					roleManager.enabledActivities(url);
+
 				url = "help:" + url;
+			}
 
 			URLConnection con = openConnection(url, req, resp);
 			resp.setContentType(con.getContentType());
 
 			long maxAge = 0;
 			try {
-				// getExpiration() throws NullPointerException when URL is jar:file:...
+				// getExpiration() throws NullPointerException when URL is
+				// jar:file:...
 				long expiration = con.getExpiration();
 				maxAge = (expiration - System.currentTimeMillis()) / 1000;
-				if (maxAge < 0 )
+				if (maxAge < 0)
 					maxAge = 0;
 			} catch (Exception e) {
 			}

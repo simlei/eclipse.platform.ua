@@ -46,18 +46,24 @@ public class TocData extends RequestData {
 	// Number of topics generated so far
 	private int topicsGenerated = 0;
 
-	// List of TOC's
+	// List of TOC's, unfiltered
 	private IToc[] tocs;
+	// List of TOC's, filtered by roles
+	private IToc[] filteredTocs;
 
 	// images directory
 	private String imagesDirectory;
 
 	/**
 	 * Constructs the xml data for the contents page.
+	 * 
 	 * @param context
 	 * @param request
 	 */
-	public TocData(ServletContext context, HttpServletRequest request, HttpServletResponse response) {
+	public TocData(
+		ServletContext context,
+		HttpServletRequest request,
+		HttpServletResponse response) {
 		super(context, request, response);
 		if (dynamicLoadDepths < 1) {
 			WebappPreferences pref = new WebappPreferences();
@@ -118,6 +124,7 @@ public class TocData extends RequestData {
 
 	/**
 	 * Returns the selected TOC
+	 * 
 	 * @return int
 	 */
 	public int getSelectedToc() {
@@ -156,6 +163,16 @@ public class TocData extends RequestData {
 		return tocs;
 	}
 
+	/**
+	 * Check if given TOC is visible (belongs to active role)
+	 * 
+	 * @param toc
+	 * @return true if TOC should be visible
+	 */
+	public boolean isInRole(int toc) {
+		return HelpPlugin.getTocManager().isTocInRole(toc, getLocale());
+	}
+
 	private void loadTocs() {
 		tocs = HelpPlugin.getTocManager().getTocs(getLocale());
 		// Find the requested TOC
@@ -185,7 +202,7 @@ public class TocData extends RequestData {
 	 * Finds a TOC that contains specified topic
 	 * 
 	 * @param topic
-	 *           the topic href
+	 *            the topic href
 	 */
 	private int findTocContainingTopic(String topic) {
 		if (topic == null || topic.equals(""))
@@ -211,6 +228,7 @@ public class TocData extends RequestData {
 	}
 	/**
 	 * Finds topic in a TOC
+	 * 
 	 * @return ITopic or null
 	 */
 	private ITopic findTopic() {
@@ -238,6 +256,7 @@ public class TocData extends RequestData {
 
 	/**
 	 * Generates the HTML code (a tree) for a TOC.
+	 * 
 	 * @param toc
 	 * @param out
 	 * @throws IOException
@@ -291,10 +310,10 @@ public class TocData extends RequestData {
 	 * @param topic
 	 * @param out
 	 * @param maxLevels
-	 *           relative number of topic levels to generate (pass
-	 *           <0 for inifinite), 1 generates this topic as last level topic
+	 *            relative number of topic levels to generate (pass
+	 *            <0 for inifinite), 1 generates this topic as last level topic
 	 * @param currentLevel
-	 *           current level of topic, 0 is first Level under TOC
+	 *            current level of topic, 0 is first Level under TOC
 	 * @throws IOException
 	 */
 	private void generateTopic(

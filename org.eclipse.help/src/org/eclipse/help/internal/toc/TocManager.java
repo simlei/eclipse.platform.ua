@@ -43,6 +43,18 @@ public class TocManager {
 	}
 
 	/**
+	 * Checks if a TOC is available in the active roles.
+	 */
+	public boolean isTocInRole(int toc, String locale) {
+		IToc[] tocs = getTocs(locale); // build them all
+		IHelpRoleManager roleManager = HelpPlugin.getRoleManager();
+		if (roleManager == null) {
+			return true;
+		}
+		return roleManager.isEnabled(tocs[toc].getHref());
+	}
+
+	/**
 	 * Returns the list of TOC's available in the help system
 	 */
 	public IToc[] getTocs(String locale) {
@@ -126,7 +138,7 @@ public class TocManager {
 			if (toc != null)
 				orderedTocs.add(toc);
 		}
-		// add the remaining tocs 
+		// add the remaining tocs
 		for (Iterator it = unorderedTocs.iterator(); it.hasNext();) {
 			IToc toc = (IToc) it.next();
 			if (!orderedTocs.contains(toc))
@@ -136,10 +148,9 @@ public class TocManager {
 	}
 
 	/**
-	 * Reads product.ini to determine toc ordering.
-	 * It works in current drivers, but will not
-	 * if location/name of product.ini change.
-	 * Return the list of href's.
+	 * Reads product.ini to determine toc ordering. It works in current
+	 * drivers, but will not if location/name of product.ini change. Return the
+	 * list of href's.
 	 */
 	private ArrayList getPreferredTocOrder() {
 		ArrayList orderedTocs = new ArrayList();
@@ -161,7 +172,8 @@ public class TocManager {
 	}
 
 	/**
-	 * Returns the toc from a list of IToc by identifying it with its (unique) href.
+	 * Returns the toc from a list of IToc by identifying it with its (unique)
+	 * href.
 	 */
 	private IToc getToc(Collection list, String href) {
 		for (Iterator it = list.iterator(); it.hasNext();) {
