@@ -28,7 +28,7 @@ public class MozillaFactory implements IBrowserFactory, IExecutableExtension {
 			return false;
 		}
 		try {
-			Process pr = Runtime.getRuntime().exec("which " + executableName);
+			Process pr = Runtime.getRuntime().exec("which " + executable);
 			(new StreamConsumer(pr.getInputStream())).start();
 			(new StreamConsumer(pr.getErrorStream())).start();
 			pr.waitFor();

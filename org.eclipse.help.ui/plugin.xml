@@ -99,20 +99,22 @@
 	</extension>
 	<extension point="org.eclipse.help.ui.browser">
 		<browser id="org.eclipse.help.ui.mozillaLinux"
-			factoryclass="org.eclipse.help.ui.internal.browser.MozillaFactory"
 			name="%mozilla">
-				<parameter name="executable" value="mozilla" />
-				<parameter name="executableName" value="Mozilla" />
-				<parameter name="os" value="Linux" />
+				<factoryclass class="org.eclipse.help.ui.internal.browser.MozillaFactory">
+					<parameter name="executable" value="mozilla" />
+					<parameter name="executableName" value="Mozilla" />
+					<parameter name="os" value="Linux" />
+				</factoryclass>
 		</browser>
 	</extension>
 	<extension point="org.eclipse.help.ui.browser">
 		<browser id="org.eclipse.help.ui.netscapeLinux"
-			factoryclass="org.eclipse.help.ui.internal.browser.MozillaFactory"
 			name="%netscape">
-				<parameter name="executable" value="netscape" />
-				<parameter name="executableName" value="Netscape" />
-				<parameter name="os" value="Linux" />
+				<factoryclass class="org.eclipse.help.ui.internal.browser.MozillaFactory">
+					<parameter name="executable" value="netscape" />
+					<parameter name="executableName" value="Netscape" />
+					<parameter name="os" value="Linux" />
+				</factoryclass>
 		</browser>
 	</extension>
 	<extension point="org.eclipse.help.ui.browser">
