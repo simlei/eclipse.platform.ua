@@ -31,17 +31,22 @@ public class WebappResources {
 	 * @param request HttpServletRequest or null; default locale will be used if null passed
 	 */
 	public static String getString(String name, HttpServletRequest request) {
-		Locale locale = request == null? Locale.getDefault() : request.getLocale();
+		Locale locale =
+			request == null ? Locale.getDefault() : request.getLocale();
 
 		// check cache
-		ResourceBundle bundle = (ResourceBundle) resourceBundleTable.get(locale);
+		ResourceBundle bundle =
+			(ResourceBundle) resourceBundleTable.get(locale);
 
 		// load bundle
-		if (bundle == null)
+		if (bundle == null) {
 			bundle = ResourceBundle.getBundle("webapp", locale);
-
-		if (bundle == null)
-			return name;
+			if (bundle != null) {
+				resourceBundleTable.put(locale, bundle);
+			} else {
+				return name;
+			}
+		}
 
 		String value = bundle.getString(name);
 		if (value != null)
