@@ -5,10 +5,12 @@ package org.eclipse.help.ui.internal;
  */
 import java.text.*;
 import java.util.*;
-import org.eclipse.swt.SWT;
+
+import org.eclipse.help.internal.context.*;
+import org.eclipse.help.internal.util.*;
+import org.eclipse.swt.*;
 import org.eclipse.swt.custom.*;
-import org.eclipse.help.internal.context.ContextsNode;
-import org.eclipse.help.ui.internal.util.TString;
+
 public class StyledLineWrapper implements StyledTextContent {
 	/** Lines after splitting */
 	private ArrayList lines = new ArrayList();

@@ -4,14 +4,15 @@
  */
 package org.eclipse.help.ui.internal.browser.linux;
 import java.io.*;
+
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.help.ui.browser.IBrowser;
 import org.eclipse.help.ui.internal.WorkbenchHelpPlugin;
 import org.eclipse.help.ui.internal.util.StreamConsumer;
-import org.eclipse.help.ui.browser.IBrowser;
 public class MozillaBrowserAdapter implements IBrowser {
 	// delay that it takes mozilla to start responding
 	// to remote command after mozilla has been called
-	private static int DELAY = 5000;
+	private static final int DELAY = 5000;
 	private static long browserFullyOpenedAt = 0;
 	private static BrowserThread lastBrowserThread = null;
 	private static MozillaBrowserAdapter instance;
@@ -72,28 +73,33 @@ public class MozillaBrowserAdapter implements IBrowser {
 	 * @see IBrowser#setLocation(int, int)
 	 */
 	public void setLocation(int x, int y) {
-		this.x = x;
-		this.y = y;
+		MozillaBrowserAdapter.x = x;
+		MozillaBrowserAdapter.y = y;
 		setLocationPending = true;
 	}
 	/*
 	 * @see IBrowser#setSize(int, int)
 	 */
 	public void setSize(int width, int height) {
-		this.width = width;
-		this.height = height;
+		MozillaBrowserAdapter.width = width;
+		MozillaBrowserAdapter.height = height;
 		setSizePending = true;
 	}
 	private synchronized String createPositioningURL(String url) {
 		IPath pluginPath = WorkbenchHelpPlugin.getDefault().getStateLocation();
 		File outFile =
-			pluginPath.append("mozillaPositon").append("position.html").toFile();
+			pluginPath
+				.append("mozillaPositon")
+				.append("position.html")
+				.toFile();
 		try {
 			outFile.getParentFile().mkdirs();
 			PrintWriter writer =
 				new PrintWriter(
 					new BufferedWriter(
-						new OutputStreamWriter(new FileOutputStream(outFile), "UTF8")),
+						new OutputStreamWriter(
+							new FileOutputStream(outFile),
+							"UTF8")),
 					false);
 			writer.println(
 				"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
@@ -151,7 +157,7 @@ public class MozillaBrowserAdapter implements IBrowser {
 				try {
 					if (exitRequested)
 						return;
-					Thread.currentThread().sleep(100);
+					Thread.sleep(100);
 				} catch (InterruptedException ie) {
 				}
 		}

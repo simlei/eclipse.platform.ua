@@ -4,18 +4,24 @@
  */
 package org.eclipse.help.ui.internal.browser.hpux;
 import java.io.IOException;
-import org.eclipse.help.ui.internal.util.StreamConsumer;
+
+import org.eclipse.help.internal.util.Logger;
 import org.eclipse.help.ui.browser.IBrowser;
+import org.eclipse.help.ui.internal.util.*;
+import org.eclipse.swt.widgets.Display;
 public class NetscapeBrowserAdapter implements IBrowser {
 	// delay that it takes browser to start responding
 	// to remote command after the browser has been called
-	private static int DELAY = 5000;
+	private static final int DELAY = 5000;
 	private static long browserFullyOpenedAt = 0;
 	private static BrowserThread lastBrowserThread = null;
 	private static NetscapeBrowserAdapter instance;
+	private static Thread mainThread;
 	/**
+	 * Constructor
 	 */
 	private NetscapeBrowserAdapter() {
+		mainThread=Thread.currentThread();
 	}
 	public static NetscapeBrowserAdapter getInstance() {
 		if (instance == null)
@@ -79,6 +85,22 @@ public class NetscapeBrowserAdapter implements IBrowser {
 				return pr.exitValue();
 			} catch (InterruptedException e) {
 			} catch (IOException e) {
+				Logger.logError(
+					WorkbenchResources.getString(
+						"NetscapeBrowserAdapter.executeFailed"),
+					e);
+				try {
+					Display.findDisplay(mainThread).asyncExec(new Runnable() {
+						public void run() {
+							ErrorUtil.displayErrorDialog(
+								WorkbenchResources.getString(
+									"NetscapeBrowserAdapter.executeFailed"));
+						}
+					});
+				} catch (Exception e2) {
+				}
+				// return success so second command does not execute
+				return 0;
 			}
 			return -1;
 		}
@@ -99,7 +121,7 @@ public class NetscapeBrowserAdapter implements IBrowser {
 				try {
 					if (exitRequested)
 						return;
-					Thread.currentThread().sleep(100);
+					Thread.sleep(100);
 				} catch (InterruptedException ie) {
 				}
 		}

@@ -4,12 +4,13 @@
  */
 package org.eclipse.help.ui.internal.browser.aix;
 import java.io.IOException;
-import org.eclipse.help.ui.internal.util.StreamConsumer;
+
 import org.eclipse.help.ui.browser.IBrowser;
+import org.eclipse.help.ui.internal.util.StreamConsumer;
 public class NetscapeBrowserAdapter implements IBrowser {
 	// delay that it takes browser to start responding
 	// to remote command after the browser has been called
-	private static int DELAY = 5000;
+	private static final int DELAY = 5000;
 	private static long browserFullyOpenedAt = 0;
 	private static BrowserThread lastBrowserThread = null;
 	private static NetscapeBrowserAdapter instance;
@@ -99,7 +100,7 @@ public class NetscapeBrowserAdapter implements IBrowser {
 				try {
 					if (exitRequested)
 						return;
-					Thread.currentThread().sleep(100);
+					Thread.sleep(100);
 				} catch (InterruptedException ie) {
 				}
 		}
