@@ -13,9 +13,11 @@
 <% 
 	LayoutData data = new LayoutData(application,request);
 	// Initiate test for persisted cookies
-	Cookie cookieTest=new Cookie("cookiesEnabled", "yes");
-	cookieTest.setMaxAge(/*24*60*/5*60);
-	response.addCookie(cookieTest);
+	if(data.getMode() == LayoutData.MODE_INFOCENTER){
+		Cookie cookieTest=new Cookie("cookiesEnabled", "yes");
+		cookieTest.setMaxAge(365*24*60*60);
+		response.addCookie(cookieTest);
+	}
 %>
 
 <html>

@@ -22,7 +22,6 @@
 			}
 		}
 	}
-	System.out.println("Cookies enabled = "+cookiesEnabled);
 	if(cookiesEnabled || (new RequestData(application, request)).getMode() == RequestData.MODE_INFOCENTER){
 		request.getRequestDispatcher("/advanced/searchScoped.jsp").forward(request, response);
 	}else{
