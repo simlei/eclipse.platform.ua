@@ -36,13 +36,12 @@ public class WebappWorkingSetManager implements IHelpWorkingSetManager {
 			wSetManager =
 				new InfocenterWorkingSetManager(request, response, locale);
 		} else {
-			WorkingSetManager wsmgr = HelpSystem.getWorkingSetManager(locale);
+			wSetManager = HelpSystem.getWorkingSetManager(locale);
 			if (!workingSetsSynchronized
 				&& HelpSystem.getMode() == HelpSystem.MODE_WORKBENCH) {
 				// upon startup in workbench mode, make sure working sets are in synch with those from UI
 				workingSetsSynchronized = true;
-				wsmgr.synchronizeWorkingSets();
-				wSetManager = wsmgr;
+				((WorkingSetManager)wSetManager).synchronizeWorkingSets();
 			}
 		}
 
