@@ -27,7 +27,8 @@ public class TocData extends RequestData {
 	// suggested number of topic levels for large books
 	private static int dynamicLoadDepths;
 	// maximum number of topics generated when loading levels dynamically
-	// above which dynamicLoadDepths is ignored, the rest of branches will be 1 deep 
+	// above which dynamicLoadDepths is ignored, the rest of branches will be 1
+	// deep
 	private static int honorLevelsLimit;
 
 	// Request parameters
@@ -96,7 +97,7 @@ public class TocData extends RequestData {
 	}
 
 	// Accessor methods to avoid exposing help classes directly to JSP.
-	// Note: this seems ok for now, but maybe we need to reconsider this 
+	// Note: this seems ok for now, but maybe we need to reconsider this
 	//       and allow help classes in JSP's.
 
 	public int getTocCount() {
@@ -124,9 +125,10 @@ public class TocData extends RequestData {
 	}
 
 	/**
-	 * Returns the topic to display.
-	 * If there is a TOC, return its topic description.
-	 * Return null if no topic is specified and there is no toc description.
+	 * Returns the topic to display. If there is a TOC, return its topic
+	 * description. Return null if no topic is specified and there is no toc
+	 * description.
+	 * 
 	 * @return String
 	 */
 	public String getSelectedTopic() {
@@ -145,8 +147,9 @@ public class TocData extends RequestData {
 	}
 
 	/**
-	 * Returns a list of all the TOC's as xml elements.
-	 * Individual TOC's are not loaded yet.
+	 * Returns a list of all the TOC's as xml elements. Individual TOC's are
+	 * not loaded yet.
+	 * 
 	 * @return Element[]
 	 */
 	public IToc[] getTocs() {
@@ -180,7 +183,9 @@ public class TocData extends RequestData {
 
 	/**
 	 * Finds a TOC that contains specified topic
-	 * @param topic the topic href
+	 * 
+	 * @param topic
+	 *           the topic href
 	 */
 	private int findTocContainingTopic(String topic) {
 		if (topic == null || topic.equals(""))
@@ -283,11 +288,13 @@ public class TocData extends RequestData {
 	}
 
 	/**
-	 * 
 	 * @param topic
 	 * @param out
-	 * @param maxLevels relative number of topic levels to generate (pass <0 for inifinite), 1 generates this topic as last level topic
-	 * @param currentLevel current level of topic, 0 is first Level under TOC
+	 * @param maxLevels
+	 *           relative number of topic levels to generate (pass
+	 *           <0 for inifinite), 1 generates this topic as last level topic
+	 * @param currentLevel
+	 *           current level of topic, 0 is first Level under TOC
 	 * @throws IOException
 	 */
 	private void generateTopic(
@@ -312,11 +319,11 @@ public class TocData extends RequestData {
 			out.write("<li>");
 			out.write("<img src='");
 			out.write(imagesDirectory);
-			out.write("/plus.gif' class='collapsed' >");
+			out.write("/plus.gif' class='collapsed' alt=\"\">");
 			out.write("<a href='" + UrlUtil.getHelpURL(topic.getHref()) + "'>");
 			out.write("<img src='");
 			out.write(imagesDirectory);
-			out.write("/container_obj.gif'>");
+			out.write("/container_obj.gif' alt=\"\">");
 			out.write(UrlUtil.htmlEncode(topic.getLabel()));
 			out.write("</a>");
 
@@ -362,11 +369,11 @@ public class TocData extends RequestData {
 			out.write("<li>");
 			out.write("<img src='");
 			out.write(imagesDirectory);
-			out.write("/plus.gif' class='h'>");
+			out.write("/plus.gif' class='h' alt=\"\">");
 			out.write("<a href='" + UrlUtil.getHelpURL(topic.getHref()) + "'>");
 			out.write("<img src='");
 			out.write(imagesDirectory);
-			out.write("/topic.gif'>");
+			out.write("/topic.gif' alt=\"\">");
 			out.write(UrlUtil.htmlEncode(topic.getLabel()));
 			out.write("</a>");
 		}
@@ -376,6 +383,7 @@ public class TocData extends RequestData {
 
 	/**
 	 * Generates the HTML code (a tree) for a TOC.
+	 * 
 	 * @param toc
 	 * @param out
 	 * @throws IOException
@@ -402,7 +410,7 @@ public class TocData extends RequestData {
 			out.write("href='" + UrlUtil.getHelpURL(topic.getHref()) + "'>");
 			out.write("<img src='");
 			out.write(imagesDirectory);
-			out.write("/container_obj.gif' border=0>&nbsp;");
+			out.write("/container_obj.gif' alt=\"\" border=0>&nbsp;");
 			out.write(UrlUtil.htmlEncode(topic.getLabel()));
 			out.write("</a>");
 			out.write("</nobr>");
@@ -424,7 +432,7 @@ public class TocData extends RequestData {
 			out.write("href='" + UrlUtil.getHelpURL(topic.getHref()) + "'>");
 			out.write("<img src='");
 			out.write(imagesDirectory);
-			out.write("/topic.gif' border=0>&nbsp;");
+			out.write("/topic.gif' alt=\"\" border=0>&nbsp;");
 			out.write(UrlUtil.htmlEncode(topic.getLabel()));
 			out.write("</a>");
 			out.write("</nobr>");
