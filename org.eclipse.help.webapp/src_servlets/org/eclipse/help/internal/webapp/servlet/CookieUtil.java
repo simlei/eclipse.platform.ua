@@ -15,6 +15,8 @@ import java.util.*;
 
 import javax.servlet.http.*;
 
+import org.eclipse.help.internal.webapp.*;
+
 /**
  * Utilities for working with cookies
  * @since 3.0
@@ -30,16 +32,26 @@ public class CookieUtil {
 	public static String getCookieValue(
 		String name,
 		HttpServletRequest request) {
+		String ret = null;
 		Cookie[] cookies = request.getCookies();
-		if (cookies == null) {
-			return null;
-		}
-		for (int i = 0; i < cookies.length; i++) {
-			if (name.equals(cookies[i].getName())) {
-				return cookies[i].getValue();
+		if (cookies != null) {
+			for (int i = 0; i < cookies.length; i++) {
+				if (name.equals(cookies[i].getName())) {
+					ret = cookies[i].getValue();
+					break;
+				}
 			}
 		}
-		return null;
+		if (HelpWebappPlugin.DEBUG_WORKINGSETS) {
+			System.out.println(
+				"CookieUtil.getCookieValue("
+					+ name
+					+ ", "
+					+ request.getRequestURI()
+					+ ") returning "
+					+ ret);
+		}
+		return ret;
 	}
 	public static void setCookieValue(
 		String name,
@@ -47,10 +59,11 @@ public class CookieUtil {
 		HttpServletResponse response) {
 		Cookie cookie = new Cookie(name, value);
 		cookie.setMaxAge(COOKIE_LIFE);
-		// TODO comment system.out
-		System.out.println("Saving data in cookie: " + value);
 		response.addCookie(cookie);
-
+		if (HelpWebappPlugin.DEBUG_WORKINGSETS) {
+			System.out.println(
+				"CookieUtil.setCookieValue(" + name + ", " + value + ",...)");
+		}
 	}
 
 	public static void deleteCookie(
@@ -59,7 +72,6 @@ public class CookieUtil {
 		Cookie cookie = new Cookie(name, "");
 		cookie.setMaxAge(0);
 		response.addCookie(cookie);
-
 	}
 	/**
 	 * Saves string in multiple browser cookies.  Cookies can store limited length string.
@@ -77,50 +89,53 @@ public class CookieUtil {
 		String data,
 		int maxCookies,
 		HttpServletRequest request,
-		HttpServletResponse response) throws IOException {
-			int len = data.length();
-			int n = len / MAX_COOKIE_PAYLOAD;
-			if (n > maxCookies) {
-				throw new IOException("Too may cookies required to store data.");
+		HttpServletResponse response)
+		throws IOException {
+		int len = data.length();
+		int n = len / MAX_COOKIE_PAYLOAD;
+		if (n > maxCookies) {
+			throw new IOException("Too may cookies required to store data.");
+		}
+		for (int i = 1; i <= n; i++) {
+			if (i == 1) {
+				setCookieValue(
+					name + "1",
+					len + "<" + data.substring(0, MAX_COOKIE_PAYLOAD),
+					response);
+			} else {
+				setCookieValue(
+					name + i,
+					data.substring(
+						MAX_COOKIE_PAYLOAD * (i - 1),
+						MAX_COOKIE_PAYLOAD * i),
+					response);
 			}
-			for (int i = 1; i <= n; i++) {
-				if (i == 1) {
-					setCookieValue(
-						name + "1",
-						len + "<" + data.substring(0, MAX_COOKIE_PAYLOAD),
-						response);
-				} else {
-					setCookieValue(
-						name + i,
-						data.substring(
-							MAX_COOKIE_PAYLOAD * (i - 1),
-							MAX_COOKIE_PAYLOAD * i),
-						response);
-				}
+		}
+		if (len % MAX_COOKIE_PAYLOAD > 0) {
+			if (n == 0) {
+				setCookieValue(
+					name + "1",
+					len + "<" + data.substring(0, len),
+					response);
+			} else {
+				setCookieValue(
+					name + (n + 1),
+					data.substring(MAX_COOKIE_PAYLOAD * n, len),
+					response);
 			}
-			if (len % MAX_COOKIE_PAYLOAD > 0) {
-				if (n == 0) {
-					setCookieValue(
-						name + "1",
-						len + "<" + data.substring(0, len),
-						response);
-				} else {
-					setCookieValue(
-						name + (n + 1),
-						data.substring(MAX_COOKIE_PAYLOAD * n, len),
-						response);
-				}
-			}
+		}
 
-			// if using less cookies than maximum, delete not needed cookies from last time
-			for (int i = n + 1; i <= maxCookies; i++) {
-				if (i == n + 1 && len % MAX_COOKIE_PAYLOAD > 0) {
-					continue;
-				}
-				if (getCookieValue(name + i, request) != null) {
-					deleteCookie(name + i, response);
-				}
+		// if using less cookies than maximum, delete not needed cookies from last time
+		for (int i = n + 1; i <= maxCookies; i++) {
+			if (i == n + 1 && len % MAX_COOKIE_PAYLOAD > 0) {
+				continue;
 			}
+			if (getCookieValue(name + i, request) != null) {
+				deleteCookie(name + i, response);
+			} else {
+				break;
+			}
+		}
 	}
 	/**
 	 * @return null or String
@@ -130,10 +145,11 @@ public class CookieUtil {
 		HttpServletRequest request) {
 		String value1 = CookieUtil.getCookieValue(name + "1", request);
 		if (value1 == null) {
+			// no cookie
 			return null;
 		}
 		//String lengthAndSubstring1[] = value1.split("<");
-		String lengthAndSubstring1[] = CookieUtil.split(value1,'<');
+		String lengthAndSubstring1[] = CookieUtil.split(value1, '<');
 		if (lengthAndSubstring1.length < 2) {
 			return null;
 		}
@@ -166,12 +182,7 @@ public class CookieUtil {
 		}
 
 		if (data.length() != len) {
-			// TODO comment system.out
-			System.out.println(
-				"Verification error data lenght is "
-					+ data.length()
-					+ ", instead of "
-					+ len);
+			return null;
 		}
 
 		return data.toString();
@@ -194,6 +205,5 @@ public class CookieUtil {
 		fragments.add(s);
 		return (String[]) fragments.toArray(new String[fragments.size()]);
 	}
-
 
 }

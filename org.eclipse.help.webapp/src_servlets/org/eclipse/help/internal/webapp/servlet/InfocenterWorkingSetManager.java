@@ -18,11 +18,12 @@ import javax.servlet.http.*;
 import org.eclipse.core.runtime.*;
 import org.eclipse.help.internal.*;
 import org.eclipse.help.internal.util.*;
+import org.eclipse.help.internal.webapp.*;
 import org.eclipse.help.internal.workingset.*;
 
 /**
- * The working  set manager stores help working sets. Working sets are persisted
- * whenever one is added or removed.
+ * The Infocenter working  set manager stores help working sets. Working sets are persisted
+ * in client cookies whenever one is added or removed.
  * @since 3.0
  */
 public class InfocenterWorkingSetManager implements IHelpWorkingSetManager {
@@ -152,63 +153,61 @@ public class InfocenterWorkingSetManager implements IHelpWorkingSetManager {
 				}
 				if (elements[e] == null) {
 					// working set cannot be restored
-					System.out.println("cannot restore ws=" + nameAndHrefs[h]);
-					// TODO comment system.out
 					continue i;
 				}
 			}
 			WorkingSet ws = createWorkingSet(name, elements);
 			workingSets.add(ws);
 		}
-
 	}
+
 	/* *
 	 *  Persists all working sets. Should only be called by the webapp working
 	 * set dialog.
 	 * Saves the working sets in the persistence store (cookie)
 	 * format: curentWorkingSetName|name1&href11&href12|name2&href22
 	 */
-	private void saveState() /* throws IOException*/ {
-		try {
-			StringBuffer data = new StringBuffer();
-			data.append(URLCoder.encode(currentWorkingSet /*, "UTF8"*/
+	private void saveState() {
+		StringBuffer data = new StringBuffer();
+		data.append(URLCoder.encode(currentWorkingSet /*, "UTF8"*/
+		));
+
+		for (Iterator i = workingSets.iterator(); i.hasNext();) {
+			data.append('|');
+			WorkingSet ws = (WorkingSet) i.next();
+			data.append(URLCoder.encode(ws.getName() /*, "UTF8"*/
 			));
 
-			for (Iterator i = workingSets.iterator(); i.hasNext();) {
-				data.append('|');
-				WorkingSet ws = (WorkingSet) i.next();
-				data.append(URLCoder.encode(ws.getName() /*, "UTF8"*/
-				));
+			AdaptableHelpResource[] resources = ws.getElements();
+			for (int j = 0; j < resources.length; j++) {
+				data.append('&');
 
-				AdaptableHelpResource[] resources = ws.getElements();
-				for (int j = 0; j < resources.length; j++) {
-					data.append('&');
-
-					IAdaptable parent = resources[j].getParent();
-					if (parent == getRoot()) {
-						// saving toc
-						data.append(URLCoder.encode(resources[j].getHref()
-						/*, "UTF8"*/
-						));
-					} else {
-						// saving topic as tochref_topic#_
-						AdaptableToc toc = (AdaptableToc) parent;
-						AdaptableHelpResource[] siblings = (toc).getChildren();
-						for (int t = 0; t < siblings.length; t++) {
-							if (siblings[t] == resources[j]) {
-								data.append(URLCoder.encode(toc.getHref()
-								/*, "UTF8"*/
-								));
-								data.append('_');
-								data.append(t);
-								data.append('_');
-								break;
-							}
+				IAdaptable parent = resources[j].getParent();
+				if (parent == getRoot()) {
+					// saving toc
+					data.append(URLCoder.encode(resources[j].getHref()
+					/*, "UTF8"*/
+					));
+				} else {
+					// saving topic as tochref_topic#_
+					AdaptableToc toc = (AdaptableToc) parent;
+					AdaptableHelpResource[] siblings = (toc).getChildren();
+					for (int t = 0; t < siblings.length; t++) {
+						if (siblings[t] == resources[j]) {
+							data.append(URLCoder.encode(toc.getHref()
+							/*, "UTF8"*/
+							));
+							data.append('_');
+							data.append(t);
+							data.append('_');
+							break;
 						}
 					}
 				}
 			}
+		}
 
+		try {
 			CookieUtil.saveString(
 				COOKIE_NAME,
 				data.toString(),
@@ -216,7 +215,11 @@ public class InfocenterWorkingSetManager implements IHelpWorkingSetManager {
 				request,
 				response);
 		} catch (IOException ioe) {
-			// TODO do not catch
+			if (HelpWebappPlugin.DEBUG_WORKINGSETS) {
+				System.out.println(
+					"InfocenterWorkingSetManager.saveState(): Too much data to save: "
+						+ data.toString());
+			}
 		}
 	}
 
