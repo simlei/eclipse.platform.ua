@@ -356,7 +356,6 @@ public class InfocenterWorkingSetManager implements IHelpWorkingSetManager {
 		}
 		StringBuffer data=new StringBuffer(len);
 		data.append(lengthAndSubstring1[1]);
-		System.out.println("Appened "+lengthAndSubstring1[1].length());
 		int n = len / MAX_COOKIE_PAYLOAD;
 		for (int i = 2; i <= n; i++) {
 			String substring=getCookieValue("wset"+i);
@@ -364,8 +363,6 @@ public class InfocenterWorkingSetManager implements IHelpWorkingSetManager {
 				return null;
 			}
 			data.append(substring);
-			// TODO comment system.out
-			System.out.println("Appened "+substring.length());
 		}
 		if (len % MAX_COOKIE_PAYLOAD > 0 && n>0) {
 			String substring=getCookieValue("wset"+(n+1));
@@ -373,12 +370,9 @@ public class InfocenterWorkingSetManager implements IHelpWorkingSetManager {
 				return null;
 			}
 			data.append(substring);
-			// TODO comment system.out
-			System.out.println("Appened "+substring.length());
 		}
 		// TODO comment system.out
 		System.out.println("data.length()"+data.length());
-		System.out.println("data.toString().length()"+data.toString().length());
 		if(data.length()!=len){
 			// TODO comment system.out
 			System.out.println("Verification error data lenght is "+data.length()+", instead of "+len);
