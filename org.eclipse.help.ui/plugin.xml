@@ -90,8 +90,6 @@
 					<parameter name="os" value="Linux" />
 				</factoryclass>
 		</browser>
-	</extension>
-	<extension point="org.eclipse.help.ui.browser">
 		<browser id="org.eclipse.help.ui.netscapeLinux"
 			name="%netscape_adapter">
 				<factoryclass class="org.eclipse.help.ui.internal.browser.MozillaFactory">
@@ -100,8 +98,6 @@
 					<parameter name="os" value="Linux" />
 				</factoryclass>
 		</browser>
-	</extension>
-	<extension point="org.eclipse.help.ui.browser">
 		<browser id="org.eclipse.help.ui.netscapeAIX"
 			name="%netscape_adapter">
 				<factoryclass class="org.eclipse.help.ui.internal.browser.MozillaFactory">
@@ -110,8 +106,6 @@
 					<parameter name="os" value="AIX" />
 				</factoryclass>
 		</browser>
-	</extension>
-	<extension point="org.eclipse.help.ui.browser">
 		<browser id="org.eclipse.help.ui.netscapeHPUX"
 			name="%netscape_adapter">
 				<factoryclass class="org.eclipse.help.ui.internal.browser.MozillaFactory">
@@ -120,32 +114,18 @@
 					<parameter name="os" value="HP" />
 				</factoryclass>
 		</browser>
-	</extension>
-	<extension point="org.eclipse.help.ui.browser">
 		<browser id="org.eclipse.help.ui.netscapeSolaris"
-			factoryclass="org.eclipse.help.ui.internal.browser.solaris.NetscapeFactory"
-			name="%netscape_adapter" />
-	</extension>
-	<extension point="org.eclipse.help.ui.browser">
+			name="%netscape_adapter"
+			factoryclass="org.eclipse.help.ui.internal.browser.solaris.NetscapeFactory" />
 		<browser id="org.eclipse.help.ui.defaultBrowserMacOSX"
-			factoryclass="org.eclipse.help.ui.internal.browser.macosx.DefaultBrowserFactory"
-			name="%defaultBrowser" />
-	</extension>
-	<extension
-		point="org.eclipse.help.ui.browser">
-		<browser
-			factoryclass="org.eclipse.help.ui.internal.browser.SystemBrowserFactory"
+			name="%defaultBrowser"
+			factoryclass="org.eclipse.help.ui.internal.browser.macosx.DefaultBrowserFactory" />
+		<browser id="org.eclipse.help.ui.systembrowser"
 			name="%system_browser"
-			id="org.eclipse.help.ui.systembrowser">
-		</browser>
-	</extension>
-	<extension
-		point="org.eclipse.help.ui.browser">
-		<browser
-			factoryclass="org.eclipse.help.ui.internal.browser.CustomBrowserFactory"
+			factoryclass="org.eclipse.help.ui.internal.browser.SystemBrowserFactory" />
+		<browser id="org.eclipse.help.ui.custombrowser"
 			name="%custom_browser"
-			id="org.eclipse.help.ui.custombrowser">
-		</browser>
+			factoryclass="org.eclipse.help.ui.internal.browser.CustomBrowserFactory" />
 	</extension>
 
 	<!-- Search Page -->
