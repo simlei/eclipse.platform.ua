@@ -11,37 +11,33 @@ import org.eclipse.help.ui.browser.IBrowser;
 import org.eclipse.help.ui.internal.WorkbenchHelpPlugin;
 import org.eclipse.help.ui.internal.util.*;
 import org.eclipse.swt.widgets.Display;
+/**
+ * Browser adapter for browsers supporting
+ * -remote openURL command line option
+ * i.e. Mozilla and Netscape.
+ */
 public class MozillaBrowserAdapter implements IBrowser {
 	// delay that it takes mozilla to start responding
 	// to remote command after mozilla has been called
 	private static final int DELAY = 5000;
-	private static long browserFullyOpenedAt = 0;
-	private static BrowserThread lastBrowserThread = null;
-	private static MozillaBrowserAdapter instance;
-	private static int x, y;
-	private static int width, height;
-	private static boolean setLocationPending;
-	private static boolean setSizePending;
-	private static String executable;
-	private static String executableName;
-	private static Thread mainThread;
+	private long browserFullyOpenedAt = 0;
+	private BrowserThread lastBrowserThread = null;
+	private int x, y;
+	private int width, height;
+	private boolean setLocationPending = false;
+	private boolean setSizePending = false;
+	private String executable;
+	private String executableName;
+	private Thread uiThread;
 	/**
 	 * Constructor
+	 * @executable executable filename to launch
+	 * @executableName name of the program to display when error occurs
 	 */
-	private MozillaBrowserAdapter() {
-		mainThread = Thread.currentThread();
-	}
-	public static MozillaBrowserAdapter getInstance(
-		String executable,
-		String executableName) {
-		setLocationPending = false;
-		setSizePending = false;
-		if (instance == null) {
-			instance = new MozillaBrowserAdapter();
-		}
-		MozillaBrowserAdapter.executable = executable;
-		MozillaBrowserAdapter.executableName = executableName;
-		return instance;
+	MozillaBrowserAdapter(String executable, String executableName) {
+		this.uiThread = Thread.currentThread();
+		this.executable = executable;
+		this.executableName = executableName;
 	}
 	/*
 	 * @see IBrowser#close()
@@ -84,16 +80,16 @@ public class MozillaBrowserAdapter implements IBrowser {
 	 * @see IBrowser#setLocation(int, int)
 	 */
 	public void setLocation(int x, int y) {
-		MozillaBrowserAdapter.x = x;
-		MozillaBrowserAdapter.y = y;
+		this.x = x;
+		this.y = y;
 		setLocationPending = true;
 	}
 	/*
 	 * @see IBrowser#setSize(int, int)
 	 */
 	public void setSize(int width, int height) {
-		MozillaBrowserAdapter.width = width;
-		MozillaBrowserAdapter.height = height;
+		this.width = width;
+		this.height = height;
 		setSizePending = true;
 	}
 	private synchronized String createPositioningURL(String url) {
@@ -154,7 +150,7 @@ public class MozillaBrowserAdapter implements IBrowser {
 						executableName),
 					e);
 				try {
-					Display.findDisplay(mainThread).asyncExec(new Runnable() {
+					Display.findDisplay(uiThread).asyncExec(new Runnable() {
 						public void run() {
 							ErrorUtil.displayErrorDialog(
 								WorkbenchResources.getString(

@@ -13,6 +13,7 @@ public class MozillaFactory implements IBrowserFactory, IExecutableExtension {
 	private String executable;
 	private String executableName;
 	private String os;
+	private MozillaBrowserAdapter browserInstance = null;
 	/**
 	 * Constructor.
 	 */
@@ -50,7 +51,12 @@ public class MozillaFactory implements IBrowserFactory, IExecutableExtension {
 	 * @see IBrowserFactory#createBrowser()
 	 */
 	public IBrowser createBrowser() {
-		return MozillaBrowserAdapter.getInstance(executable, executableName);
+		// Create single browser for all clients
+		if (browserInstance == null) {
+			browserInstance =
+				new MozillaBrowserAdapter(executable, executableName);
+		}
+		return browserInstance;
 	}
 	/**
 	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
