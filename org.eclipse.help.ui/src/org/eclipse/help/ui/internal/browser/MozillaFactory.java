@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.help.ui.browser.*;
 import org.eclipse.help.ui.internal.util.StreamConsumer;
 public class MozillaFactory implements IBrowserFactory, IExecutableExtension {
@@ -24,7 +23,10 @@ public class MozillaFactory implements IBrowserFactory, IExecutableExtension {
 	 * @see IBrowserFactory#isAvailable()
 	 */
 	public boolean isAvailable() {
-		if (!System.getProperty("os.name").toLowerCase().startsWith(os.toLowerCase())) {
+		if (!System
+			.getProperty("os.name")
+			.toLowerCase()
+			.startsWith(os.toLowerCase())) {
 			return false;
 		}
 		try {
@@ -38,6 +40,8 @@ public class MozillaFactory implements IBrowserFactory, IExecutableExtension {
 			}
 		} catch (InterruptedException e) {
 		} catch (IOException e) {
+			// launching which failed, assume executable is present
+			return true;
 		}
 		return false;
 
@@ -67,7 +71,7 @@ public class MozillaFactory implements IBrowserFactory, IExecutableExtension {
 					IStatus.ERROR,
 					"org.eclipse.help.ui",
 					IStatus.OK,
-					"!!!!!!!!!!!!!!!!!!!!required paramter missing",
+					"MozillaFactory.dataMissing",
 					e));
 		}
 	}

@@ -10,7 +10,6 @@ import org.eclipse.help.internal.util.Logger;
 import org.eclipse.help.ui.browser.IBrowser;
 import org.eclipse.help.ui.internal.WorkbenchHelpPlugin;
 import org.eclipse.help.ui.internal.util.*;
-import org.eclipse.help.ui.internal.util.StreamConsumer;
 import org.eclipse.swt.widgets.Display;
 public class MozillaBrowserAdapter implements IBrowser {
 	// delay that it takes mozilla to start responding
@@ -30,16 +29,18 @@ public class MozillaBrowserAdapter implements IBrowser {
 	 * Constructor
 	 */
 	private MozillaBrowserAdapter() {
-		mainThread=Thread.currentThread();
+		mainThread = Thread.currentThread();
 	}
-	public static MozillaBrowserAdapter getInstance(String executable, String executableName) {
+	public static MozillaBrowserAdapter getInstance(
+		String executable,
+		String executableName) {
 		setLocationPending = false;
 		setSizePending = false;
-		if (instance == null){
+		if (instance == null) {
 			instance = new MozillaBrowserAdapter();
 		}
-		MozillaBrowserAdapter.executable=executable;
-		MozillaBrowserAdapter.executableName=executableName;
+		MozillaBrowserAdapter.executable = executable;
+		MozillaBrowserAdapter.executableName = executableName;
 		return instance;
 	}
 	/*
@@ -149,14 +150,16 @@ public class MozillaBrowserAdapter implements IBrowser {
 			} catch (IOException e) {
 				Logger.logError(
 					WorkbenchResources.getString(
-						"MozillaBrowserAdapter.executeFailed", executableName),
+						"MozillaBrowserAdapter.executeFailed",
+						executableName),
 					e);
 				try {
 					Display.findDisplay(mainThread).asyncExec(new Runnable() {
 						public void run() {
 							ErrorUtil.displayErrorDialog(
 								WorkbenchResources.getString(
-									"MozillaBrowserAdapter.executeFailed", executableName));
+									"MozillaBrowserAdapter.executeFailed",
+									executableName));
 						}
 					});
 				} catch (Exception e2) {
@@ -171,12 +174,12 @@ public class MozillaBrowserAdapter implements IBrowser {
 			waitForBrowser();
 			if (exitRequested)
 				return;
-			if (openBrowser(executable+" -remote openURL(" + url + ")") == 0)
+			if (openBrowser(executable + " -remote openURL(" + url + ")") == 0)
 				return;
 			if (exitRequested)
 				return;
 			browserFullyOpenedAt = System.currentTimeMillis() + DELAY;
-			openBrowser(executable+" " + url);
+			openBrowser(executable + " " + url);
 		}
 		private void waitForBrowser() {
 			while (System.currentTimeMillis() < browserFullyOpenedAt)
