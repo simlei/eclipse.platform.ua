@@ -11,12 +11,10 @@
 <%@ page import="org.eclipse.help.internal.webapp.data.*" errorPage="/advanced/err.jsp" contentType="text/html; charset=UTF-8"%>
 <%
 	request.setCharacterEncoding("UTF-8");
-	System.out.println();
 	boolean cookiesEnabled = false;
 	Cookie[] cookies = request.getCookies();
 	if (cookies != null) {
 		for (int i = 0; i < cookies.length; i++) {
-		//System.out.println(cookies[i].getName()+"="+cookies[i].getValue());
 			if ("cookiesEnabled".equals(cookies[i].getName()) && "yes".equals(cookies[i].getValue())) {
 				cookiesEnabled = true;
 			}
