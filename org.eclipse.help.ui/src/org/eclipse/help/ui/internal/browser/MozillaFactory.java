@@ -24,7 +24,7 @@ public class MozillaFactory implements IBrowserFactory, IExecutableExtension {
 	 * @see IBrowserFactory#isAvailable()
 	 */
 	public boolean isAvailable() {
-		if (!System.getProperty("os.name").startsWith(os)) {
+		if (!System.getProperty("os.name").toLowerCase().startsWith(os.toLowerCase())) {
 			return false;
 		}
 		try {
@@ -46,7 +46,7 @@ public class MozillaFactory implements IBrowserFactory, IExecutableExtension {
 	 * @see IBrowserFactory#createBrowser()
 	 */
 	public IBrowser createBrowser() {
-		return MozillaBrowserAdapter.getInstance(executable);
+		return MozillaBrowserAdapter.getInstance(executable, executableName);
 	}
 	/**
 	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)

@@ -80,7 +80,57 @@
 		</actionSet>
 	</extension>
 			
-	<!-- WebBrowsers -->
+	<!-- Web Browsers -->
+	<extension point="org.eclipse.help.ui.browser">
+		<browser id="org.eclipse.help.ui.mozillaLinux"
+			name="%mozilla_adapter">
+				<factoryclass class="org.eclipse.help.ui.internal.browser.MozillaFactory">
+					<parameter name="executable" value="mozilla" />
+					<parameter name="executableName" value="%mozilla" />
+					<parameter name="os" value="Linux" />
+				</factoryclass>
+		</browser>
+	</extension>
+	<extension point="org.eclipse.help.ui.browser">
+		<browser id="org.eclipse.help.ui.netscapeLinux"
+			name="%netscape_adapter">
+				<factoryclass class="org.eclipse.help.ui.internal.browser.MozillaFactory">
+					<parameter name="executable" value="netscape" />
+					<parameter name="executableName" value="%netscape" />
+					<parameter name="os" value="Linux" />
+				</factoryclass>
+		</browser>
+	</extension>
+	<extension point="org.eclipse.help.ui.browser">
+		<browser id="org.eclipse.help.ui.netscapeAIX"
+			name="%netscape_adapter">
+				<factoryclass class="org.eclipse.help.ui.internal.browser.MozillaFactory">
+					<parameter name="executable" value="netscape" />
+					<parameter name="executableName" value="%netscape" />
+					<parameter name="os" value="AIX" />
+				</factoryclass>
+		</browser>
+	</extension>
+	<extension point="org.eclipse.help.ui.browser">
+		<browser id="org.eclipse.help.ui.netscapeHPUX"
+			name="%netscape_adapter">
+				<factoryclass class="org.eclipse.help.ui.internal.browser.MozillaFactory">
+					<parameter name="executable" value="netscape" />
+					<parameter name="executableName" value="%netscape" />
+					<parameter name="os" value="HP" />
+				</factoryclass>
+		</browser>
+	</extension>
+	<extension point="org.eclipse.help.ui.browser">
+		<browser id="org.eclipse.help.ui.netscapeSolaris"
+			factoryclass="org.eclipse.help.ui.internal.browser.solaris.NetscapeFactory"
+			name="%netscape_adapter" />
+	</extension>
+	<extension point="org.eclipse.help.ui.browser">
+		<browser id="org.eclipse.help.ui.defaultBrowserMacOSX"
+			factoryclass="org.eclipse.help.ui.internal.browser.macosx.DefaultBrowserFactory"
+			name="%defaultBrowser" />
+	</extension>
 	<extension
 		point="org.eclipse.help.ui.browser">
 		<browser
@@ -96,46 +146,6 @@
 			name="%custom_browser"
 			id="org.eclipse.help.ui.custombrowser">
 		</browser>
-	</extension>
-	<extension point="org.eclipse.help.ui.browser">
-		<browser id="org.eclipse.help.ui.mozillaLinux"
-			name="%mozilla">
-				<factoryclass class="org.eclipse.help.ui.internal.browser.MozillaFactory">
-					<parameter name="executable" value="mozilla" />
-					<parameter name="executableName" value="Mozilla" />
-					<parameter name="os" value="Linux" />
-				</factoryclass>
-		</browser>
-	</extension>
-	<extension point="org.eclipse.help.ui.browser">
-		<browser id="org.eclipse.help.ui.netscapeLinux"
-			name="%netscape">
-				<factoryclass class="org.eclipse.help.ui.internal.browser.MozillaFactory">
-					<parameter name="executable" value="netscape" />
-					<parameter name="executableName" value="Netscape" />
-					<parameter name="os" value="Linux" />
-				</factoryclass>
-		</browser>
-	</extension>
-	<extension point="org.eclipse.help.ui.browser">
-		<browser id="org.eclipse.help.ui.netscapeSolaris"
-			factoryclass="org.eclipse.help.ui.internal.browser.solaris.NetscapeFactory"
-			name="%netscape4" />
-	</extension>
-	<extension point="org.eclipse.help.ui.browser">
-		<browser id="org.eclipse.help.ui.netscapeAIX"
-			factoryclass="org.eclipse.help.ui.internal.browser.aix.NetscapeFactory"
-			name="%netscape4" />
-	</extension>
-	<extension point="org.eclipse.help.ui.browser">
-		<browser id="org.eclipse.help.ui.netscapeHPUX"
-			factoryclass="org.eclipse.help.ui.internal.browser.hpux.NetscapeFactory"
-			name="%netscape4" />
-	</extension>
-	<extension point="org.eclipse.help.ui.browser">
-		<browser id="org.eclipse.help.ui.defaultBrowserMacOSX"
-			factoryclass="org.eclipse.help.ui.internal.browser.macosx.DefaultBrowserFactory"
-			name="%defaultBrowser" />
 	</extension>
 
 	<!-- Search Page -->

@@ -6,9 +6,12 @@ package org.eclipse.help.ui.internal.browser;
 import java.io.*;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.help.internal.util.Logger;
 import org.eclipse.help.ui.browser.IBrowser;
 import org.eclipse.help.ui.internal.WorkbenchHelpPlugin;
+import org.eclipse.help.ui.internal.util.*;
 import org.eclipse.help.ui.internal.util.StreamConsumer;
+import org.eclipse.swt.widgets.Display;
 public class MozillaBrowserAdapter implements IBrowser {
 	// delay that it takes mozilla to start responding
 	// to remote command after mozilla has been called
@@ -21,18 +24,22 @@ public class MozillaBrowserAdapter implements IBrowser {
 	private static boolean setLocationPending;
 	private static boolean setSizePending;
 	private static String executable;
+	private static String executableName;
+	private static Thread mainThread;
 	/**
 	 * Constructor
 	 */
 	private MozillaBrowserAdapter() {
+		mainThread=Thread.currentThread();
 	}
-	public static MozillaBrowserAdapter getInstance(String executable) {
+	public static MozillaBrowserAdapter getInstance(String executable, String executableName) {
 		setLocationPending = false;
 		setSizePending = false;
 		if (instance == null){
 			instance = new MozillaBrowserAdapter();
 		}
 		MozillaBrowserAdapter.executable=executable;
+		MozillaBrowserAdapter.executableName=executableName;
 		return instance;
 	}
 	/*
@@ -140,6 +147,22 @@ public class MozillaBrowserAdapter implements IBrowser {
 				return pr.exitValue();
 			} catch (InterruptedException e) {
 			} catch (IOException e) {
+				Logger.logError(
+					WorkbenchResources.getString(
+						"MozillaBrowserAdapter.executeFailed", executableName),
+					e);
+				try {
+					Display.findDisplay(mainThread).asyncExec(new Runnable() {
+						public void run() {
+							ErrorUtil.displayErrorDialog(
+								WorkbenchResources.getString(
+									"MozillaBrowserAdapter.executeFailed", executableName));
+						}
+					});
+				} catch (Exception e2) {
+				}
+				// return success so second command does not execute
+				return 0;
 			}
 			return -1;
 		}
