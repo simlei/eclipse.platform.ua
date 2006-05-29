@@ -37,7 +37,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.PluginVersionIdentifier;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.help.internal.base.HelpBasePlugin;
@@ -48,6 +47,7 @@ import org.eclipse.help.internal.search.SearchIndex;
 import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Constants;
+import org.osgi.framework.Version;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -116,11 +116,11 @@ public class HelpIndexBuilder {
 	class PluginIdentifier {
 		String id;
 
-		PluginVersionIdentifier version;
+		Version version;
 
 		public PluginIdentifier(String id, String version) {
 			this.id = id;
-			this.version = new PluginVersionIdentifier(version);
+			this.version = new Version(version);
 		}
 	}
 
