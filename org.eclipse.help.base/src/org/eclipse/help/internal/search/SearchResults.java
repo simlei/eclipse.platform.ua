@@ -104,7 +104,9 @@ public class SearchResults implements ISearchHitCollector {
 			}
 			
 			// Set document href
-			href += "?resultof=" + urlEncodedWords; //$NON-NLS-1$
+			if (urlEncodedWords.length() > 0) {
+				href += "?resultof=" + urlEncodedWords; //$NON-NLS-1$
+			}
 			searchHitList.add(new SearchHit(href, label, rawHit.getRawSummary(), score, toc, rawHit.getRawId(), rawHit.getParticipantId(), rawHit.getFilters()));
 		}
 		searchHits = (SearchHit[]) searchHitList
