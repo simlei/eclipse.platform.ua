@@ -325,16 +325,56 @@ function selectTopic(topic)
 	var links = document.getElementsByTagName("a");
 
 	for (var i=0; i<links.length; i++)
-	{
-		if (topic == links[i].href)
 		{
-			expandPathTo(links[i], false);
-			highlightTopic(links[i]);
-			scrollIntoView(links[i]);
-			return true;
+			
+			var tempHref = links[i].href;
+			
+		//If the topic could be found in expanded toc tree, select it.	
+		  if (topic == tempHref)
+			{
+				expandPathTo(links[i], false);
+				highlightTopic(links[i]);
+				scrollIntoView(links[i]);
+				return true;
+			}
+			
+			
+	    // If the topic has anchor, remove the anchor and select it again.
+	    // Some time, a href with anchor(1.html#an1) is a link in other topic 
+	    // not in toc tree. But the root topic(1.html) is in toc view tree. 
+	    
+	    	var index= topic.indexOf('#');
+	    	if (index!=-1)
+	    	{
+			    if(topic.substr(0,index)==tempHref)
+			    {
+			       	expandPathTo(links[i], false);
+					highlightTopic(links[i]);
+					scrollIntoView(links[i]);
+					return true;
+			    }	    
+	      }
+	    
+			
+		// Remove the anchor from hrefs in toc view. If topic could be 
+		// found in the  toc view with anchor removed, select it.	
+		// This situation usually come from a search result synching
+		// to toc view.	
+		
+			var indexAnchor = tempHref.indexOf('#');
+			
+			if (indexAnchor != -1){
+				tempHref = tempHref.substring(0, indexAnchor);
+			}
+		
+			if (topic == tempHref)
+			{
+				expandPathTo(links[i], false);
+				highlightTopic(links[i]);
+				scrollIntoView(links[i]);
+				return true;
+			}
 		}
-	}
-	return false;
 }
 
 /**
