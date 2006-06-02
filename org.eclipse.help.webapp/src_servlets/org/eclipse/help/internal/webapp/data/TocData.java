@@ -372,7 +372,7 @@ public class TocData extends ActivitiesData {
 			out.write("<img src='"); //$NON-NLS-1$
 			out.write(imagesDirectory);
 			out
-					.write("/plus.gif' class='collapsed' alt=\"" + ServletResources.getString("topicClosed", request) + "\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					.write("/plus.gif' class='collapsed' alt=\"" + ServletResources.getString("topicClosed", request) + "\" title=\"" + ServletResources.getString("topicClosed", request) + "\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			out.write("<a href=" +"\""+ UrlUtil.getHelpURL(topic.getHref()) + "\""+">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			out.write("<img src='"); //$NON-NLS-1$
 			out.write(imagesDirectory);

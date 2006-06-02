@@ -216,10 +216,12 @@ function collapseOrExpand(nodeId) {
 		node.className = "collapsed";
 		img.src = plus.src;
 		img.alt = altBookClosed;
+		img.title = altBookClosed;
 	} else {
 		node.className = "expanded";
 		img.src = minus.src;
 		img.alt = altBookOpen;
+		img.title = altBookOpen;
 	}
 }
 
@@ -230,6 +232,7 @@ function collapse(nodeId) {
 	node.className = "collapsed";
 	img.src = plus.src;
 	img.alt = altBookClosed;
+	img.title = altBookClosed;
 }
 
 function expand(nodeId) {
@@ -239,6 +242,7 @@ function expand(nodeId) {
 	node.className = "expanded";
 	img.src = minus.src;
 	img.alt = altBookOpen;
+	img.title = altBookOpen;
 }
 
 function getParent(child) {
@@ -379,7 +383,7 @@ for (int i=0; i<data.getTocCount(); i++)
 	String className = state == WorkingSetData.STATE_GRAYED ? "grayed" : "checkbox";
 %>
 				<div class="book" id='<%="id"+i%>' >
-					<img id='<%="img"+i%>' alt="<%=ServletResources.getString("bookClosed", request)%>" src="<%=prefs.getImagesDirectory()%>/plus.gif" onclick="collapseOrExpand('<%=i%>')">
+					<img id='<%="img"+i%>' alt="<%=ServletResources.getString("bookClosed", request)%>" title="<%=ServletResources.getString("bookClosed", request)%>" src="<%=prefs.getImagesDirectory()%>/plus.gif" onclick="collapseOrExpand('<%=i%>')">
 					<input 	class='<%=className%>' 
 							type="checkbox" 
 							id='<%=data.getTocHref(i)%>' 
