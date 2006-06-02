@@ -248,7 +248,7 @@ function getParent(child) {
 }
 
 function updateParentState(checkbox,parentDiv) {
-
+	enableOK();
 	if (checkbox == null)
 		return;
 
@@ -271,6 +271,7 @@ function updateParentState(checkbox,parentDiv) {
 }
 
 function setSubtreeChecked(checkbox, parentDiv) {
+	enableOK();
 	var state = checkbox.checked;
 	var children = document.getElementById(parentDiv).getElementsByTagName("INPUT");
 	for (var i = children.length - 1; i >= 0; i--) {
@@ -332,9 +333,17 @@ function keyDownHandler(folderId, key, target)
   	return false;
 }
 
+function hasSelections() {
+		var hrefs = getSelectedResources();
+		if (!hrefs || hrefs == "")
+			return false;
+		else
+			return true;
+}
+
 function enableOK() {
 	var value = document.getElementById("workingSet").value;
-	if (!value || value.length == 0 || value.charAt(0) == " ")
+	if (!value || value.length == 0 || value.charAt(0) == " " || !hasSelections())
 		document.getElementById("ok").disabled = true;
 	else
 		document.getElementById("ok").disabled = false;
