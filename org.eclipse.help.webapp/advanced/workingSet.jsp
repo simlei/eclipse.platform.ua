@@ -67,9 +67,6 @@ TD, TR {
 	padding-<%=isRTL?"right":"left"%>:5px;
 	overflow:auto;
 	height:350px;
-<%if (data.isIE()) {%>
-	width:100%;
-<%}%>
 }
 
 .book {
