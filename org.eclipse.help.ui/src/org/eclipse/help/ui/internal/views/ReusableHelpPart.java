@@ -314,6 +314,8 @@ public class ReusableHelpPart implements IHelpUIConstants,
 
 		private int nflexible;
 
+		public boolean __updateActionBars = true;
+
 		public HelpPartPage(String id, String text) {
 			this.id = id;
 			this.text = text;
@@ -531,7 +533,10 @@ public class ReusableHelpPart implements IHelpUIConstants,
 					bars.activate();
 				else
 					bars.deactivate();
-				bars.updateActionBars();
+
+				// see github.com/jcryptool/crypto/issues/153
+				if (this.__updateActionBars)
+					bars.updateActionBars();
 			} else {
 				((SubToolBarManager) subToolBarManager).setVisible(visible);
 				if (subMenuManager != null) {
@@ -1069,8 +1074,15 @@ public class ReusableHelpPart implements IHelpUIConstants,
 			return false;
 		if (oldPage != null) {
 			oldPage.stop();
+			oldPage.__updateActionBars = false;
 			oldPage.setVisible(false);
+			oldPage.__updateActionBars = true;
 		}
+
+		// see github.com/jcryptool/crypto/issues/153
+		newPage.__updateActionBars = false;
+		newPage.setVisible(true);
+		newPage.__updateActionBars = true;
 		mform.getForm().setText(null); //(newPage.getText());
 		mform.getForm().getForm().setSeparatorVisible(newPage.getText()!=null);
 		Image newImage=null;
@@ -1078,7 +1090,7 @@ public class ReusableHelpPart implements IHelpUIConstants,
 		//if (iconId != null)
 			//newImage = HelpUIResources.getImage(iconId);
 		mform.getForm().setImage(newImage);
-		newPage.setVisible(true);
+
 		toolBarManager.update(true);
 		currentPage = newPage;
 		if (mform.isStale())
@@ -1092,6 +1104,7 @@ public class ReusableHelpPart implements IHelpUIConstants,
 			}
 			updateNavigation();
 		}
+
 		return true;
 	}
 
